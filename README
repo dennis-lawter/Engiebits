@@ -1,0 +1,23 @@
+Engiebits Video Game Engine
+
+Copyright (c) 2011 Dennis Lawter.  All rights reserved.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+DENNIS LAWTER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Engiebits (NGB) is a framework designed to handle the basic setup of a
+video game, using 2D, 3D, or even 2.5D graphics.  NGB handles the drawing
+of game objects, basic resource loading, 2D physics, 3D audio, handling
+GLUT windows and simple event listeners.  NGB does not impose itself, and
+can be easily overriden using calls to any of the libraries with which it
+was developed.
+
+NGB is developed in C using:
+	Mesa OpenGL
+	GLEW
+	FreeGLUT
+	OpenAL
+	ALUT
