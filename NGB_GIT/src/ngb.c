@@ -1,4 +1,4 @@
-#include "ngb.h"
+#include "NGB/ngb.h"
 
 #include <unistd.h>
 
