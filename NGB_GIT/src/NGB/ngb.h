@@ -10,7 +10,6 @@
  * DENNIS LAWTER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 #ifndef NGB_H_
@@ -38,10 +37,10 @@ typedef double NGBdouble;
  */
 
 //Linked List
-
 struct NGBLL_NODE {
 	void *content;
 	struct NGBLL_NODE *next;
+	struct NGBLL_NODE *last;
 }typedef NGBLL_NODE;
 
 struct NGBLL {
@@ -57,6 +56,7 @@ void* ngbLL_removeFront(NGBLL* list);
 void* ngbLL_removeBack(NGBLL* list);
 void* ngbLL_peakFront(NGBLL* list);
 void* ngbLL_peakBack(NGBLL* list);
+void ngbLL_insertAt(NGBLL* list, NGBuint key, void* newnode);
 void* ngbLL_removeAt(NGBLL* list, NGBuint key);
 void* ngbLL_peakAt(NGBLL* list, NGBuint key);
 void ngbLL_toArray(NGBLL* list, void* array, int* size);
@@ -105,9 +105,10 @@ void ngbHT_destroy(void);
  * ----------------------------------------------------------------
  */
 
-struct NGBkeylistener{
-	unsigned int keys [16];
-}typedef NGBkeylistener;
+struct NGBkeyListener {
+	NGBboolean altf4;
+	NGBboolean keys[512];
+}typedef NGBkeyListener;
 
 struct NGBvertex {
 	double x;
@@ -130,7 +131,7 @@ struct NGBcamera {
 	int fieldOfView;
 }typedef NGBcamera;
 
-struct NGBphysicsObject {
+struct NGB2DphysicsObject {
 	NGBpoint position;
 	NGBpoint centroid;
 	NGBboolean isSolid;
@@ -139,6 +140,7 @@ struct NGBphysicsObject {
 	NGBvector velocity;
 	NGBvector acceleration;
 	NGBvector jerk;
+	NGBuint* bitMask;
 }typedef NGBphysicsObject;
 
 struct NGBdrawable2D {
@@ -160,7 +162,8 @@ struct NGBdrawable3D {
 void ngbInit(int* argc, char** argv, NGBboolean doubleBuffer);
 int ngbInitWindowCentered(char* title, int w, int h);
 int ngbInitWindowAtPosition(char* title, int x, int y, int w, int h);
-void ngbGraphicsInit(void);
+void ngbInitGraphics(void);
+NGBkeyListener* ngbInitKeyListener(NGBboolean altf4);
 void ngbUpdateFunc(void(*func)(int));
 
 void ngbMainLoop(void);
