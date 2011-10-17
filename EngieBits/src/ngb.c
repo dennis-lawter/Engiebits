@@ -1,8 +1,8 @@
 #include "NGB/ngb.h"
 
 #include <unistd.h>
-
 #include <stdlib.h>
+
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <AL/al.h>
