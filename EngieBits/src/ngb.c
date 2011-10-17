@@ -109,6 +109,22 @@ void* ngbLL_peakFront(NGBLL* list) {
 void* ngbLL_peakBack(NGBLL* list) {
 	return list->tail->content;
 }
+NGBLL_NODE* _ngbLL_find(NGBLL* list, NGBuint key) {
+	NGBLL_NODE* findNode;
+	int i;
+	if (key > list->size / 2) {
+		findNode = list->tail;
+		for (i = list->size; i > key + 1; i--) {
+			findNode = findNode->last;
+		}
+	} else {
+		findNode = list->head;
+		for (i = 0; i < key; i++) {
+			findNode = findNode->next;
+		}
+	}
+	return findNode;
+}
 void ngbLL_insertAt(NGBLL* list, NGBuint key, void* newContent) {
 	if (key == 0) {
 		ngbLL_insertFront(list, newContent);
@@ -118,21 +134,12 @@ void ngbLL_insertAt(NGBLL* list, NGBuint key, void* newContent) {
 		NGBLL_NODE* newNode = malloc(sizeof(NGBLL_NODE));
 		newNode->content = newContent;
 
-		NGBLL_NODE* newNext = list->head;
-		int i;
-		if (key > list->size / 2) {
-			for (i = list->size; i > key + 1; i++) {
-				newNext = newNext->last;
-			}
-		} else {
-			for (i = 0; i < key; i++) {
-				newNext = newNext->next;
-			}
-		}
-		NGBLL_NODE* newLast = newNext->last;
+		NGBLL_NODE* newLast = _ngbLL_find(list, key-1);
+		NGBLL_NODE* newNext = newLast->next;
 
 		newNode->last = newLast;
 		newNode->next = newNext;
+
 		newLast->next = newNode;
 		newNext->last = newNode;
 
@@ -140,18 +147,52 @@ void ngbLL_insertAt(NGBLL* list, NGBuint key, void* newContent) {
 	}
 }
 void* ngbLL_removeAt(NGBLL* list, NGBuint key) {
-	//TODO
-	return NULL;
+	if (list->size < 1) {
+		return NULL;
+	}
+	if (key == 0) {
+		return ngbLL_removeFront(list);
+	} else if (key == list->size - 1) {
+		return ngbLL_removeBack(list);
+	} else {
+		NGBLL_NODE* findNode = _ngbLL_find(list, key);
+		findNode->last->next = findNode->next;
+		findNode->next->last = findNode->last;
+		void* content = findNode->content;
+		free(findNode);
+		return content;
+	}
 }
 void* ngbLL_peakAt(NGBLL* list, NGBuint key) {
-	//TODO
-	return NULL;
+	if (list->size < 1) {
+		return NULL;
+	} else if (key == 0) {
+		return ngbLL_peakFront(list);
+	} else if (key == list->size - 1) {
+		return ngbLL_peakBack(list);
+	}
+	NGBLL_NODE* findNode = _ngbLL_find(list, key);
+	return findNode->content;
 }
-void ngbLL_toArray(NGBLL* list, void* array, int* size) {
-	//TODO
+void** ngbLL_toArray(NGBLL* list) {
+	if (list->size > 0) {
+		void** result = malloc(list->size * sizeof(void*));
+		NGBLL_NODE* current = list->head;
+		int i;
+		for (i = 0; current != NULL; i++) {
+			result[i] = current->content;
+			current = current->next;
+		}
+		return result;
+	} else {
+		return NULL;
+	}
 }
 void ngbLL_destroy(NGBLL* list) {
-	//TODO
+	while (list->size > 0) {
+		ngbLL_removeFront(list);
+	}
+	free(list);
 }
 
 //Dynamic Array

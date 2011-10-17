@@ -59,7 +59,7 @@ void* ngbLL_peakBack(NGBLL* list);
 void ngbLL_insertAt(NGBLL* list, NGBuint key, void* newnode);
 void* ngbLL_removeAt(NGBLL* list, NGBuint key);
 void* ngbLL_peakAt(NGBLL* list, NGBuint key);
-void ngbLL_toArray(NGBLL* list, void* array, int* size);
+void** ngbLL_toArray(NGBLL* list);
 void ngbLL_destroy(NGBLL* list);
 
 //Dynamic Array
