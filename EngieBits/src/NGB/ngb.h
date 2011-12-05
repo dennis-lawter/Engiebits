@@ -78,8 +78,8 @@ void ngbDA_destroy(NGBDA* dynarr);
 //Associative Array
 
 struct NGBAA {
-	NGBDA* keys;
-	NGBDA* values;
+	struct NGBDA* keys;
+	struct NGBDA* values;
 }typedef NGBAA;
 
 NGBAA* ngbAA_create(void);
@@ -90,14 +90,14 @@ void ngbAA_destroy(NGBAA* assarr);
 //Hash Table
 
 struct NGBHT {
-	NGBLL* buckets;
+	struct NGBLL** buckets;
 }typedef NGBHT;
 
 NGBHT* ngbHT_create(void);
-void ngbHT_insert(char* key, void* data);
-void* ngbHT_get(char* key);
-char ngbHT_hash(char* key);
-void ngbHT_destroy(void);
+void ngbHT_insert(NGBHT* table, char* key, void* data);
+void* ngbHT_get(NGBHT* table, char* key);
+unsigned char ngbHT_hash(char* key);
+void ngbHT_destroy(NGBHT* table);
 
 /*
  * ----------------------------------------------------------------
@@ -105,15 +105,30 @@ void ngbHT_destroy(void);
  * ----------------------------------------------------------------
  */
 
+struct NGBprofile {
+	NGBuint resolutionX;
+	NGBuint resolutionY;
+	NGBuint colorDepth;
+	NGBboolean fullscreen;
+
+	NGBdouble mouseSensitivityX;
+	NGBdouble mouseSensitivityY;
+
+	NGBdouble masterVolume;
+	NGBdouble musicVolume;
+	NGBdouble entityVolume;
+	NGBdouble ambiantVolume;
+}typedef NGBprofile;
+
 struct NGBkeyListener {
 	NGBboolean altf4;
 	NGBboolean keys[512];
 }typedef NGBkeyListener;
 
 struct NGBvertex {
-	double x;
-	double y;
-	double z;
+	NGBdouble x;
+	NGBdouble y;
+	NGBdouble z;
 }typedef NGBvertex;
 typedef NGBvertex NGBvector;
 typedef NGBvertex NGBrotation;
@@ -128,43 +143,48 @@ struct NGBcamera {
 	NGBpoint position;
 	NGBrotation rotation;
 	NGBboolean threeDimensional;
-	int fieldOfView;
+	NGBuint fieldOfView;
 }typedef NGBcamera;
 
 struct NGB2DphysicsObject {
 	NGBpoint position;
 	NGBpoint centroid;
 	NGBboolean isSolid;
-	double mass;
-	double coefficientOfFriction;
+	NGBdouble width;
+	NGBdouble height;
+	NGBdouble depth;
+	NGBdouble mass;
+	NGBdouble coefficientOfFriction;
 	NGBvector velocity;
 	NGBvector acceleration;
 	NGBvector jerk;
 	NGBuint* bitMask;
-}typedef NGBphysicsObject;
+}typedef NGB2DphysicsObject;
 
 struct NGBdrawable2D {
 	NGBpoint origin;
-	double width;
-	double height;
-	int spriteTexture;
+	NGBdouble width;
+	NGBdouble height;
+	NGBuint spriteTexture;
 	NGBboolean isVisible;
-	NGBphysicsObject physics;
+	NGB2DphysicsObject physics;
 }typedef NGBdrawable2D;
 
 struct NGBdrawable3D {
 	NGBpoint origin;
-	int vertexBuffer;
-
-	int numBoxes;
+	NGBuint vertexBuffer;
+	NGBuint numBoxes;
 }typedef NGBdrawable3D;
 
+void ngbDraw2D(NGBdrawable2D* drawable);
+void ngbDraw3D(NGBdrawable3D* drawable);
+
 void ngbInit(int* argc, char** argv, NGBboolean doubleBuffer);
-int ngbInitWindowCentered(char* title, int w, int h);
-int ngbInitWindowAtPosition(char* title, int x, int y, int w, int h);
+int ngbInitWindowCentered(char* title, NGBuint w, NGBuint h);
+int ngbInitWindowAtPosition(char* title, NGBuint x, NGBuint y, NGBuint w, NGBuint h);
 void ngbInitGraphics(void);
 NGBkeyListener* ngbInitKeyListener(NGBboolean altf4);
-void ngbUpdateFunc(void(*func)(int));
+void ngbUpdateFunc(void(*func)(NGBuint));
 
 void ngbMainLoop(void);
 
