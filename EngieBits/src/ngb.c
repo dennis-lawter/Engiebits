@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -48,7 +48,6 @@ void _ngbDraw(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearDepth(1.0);
 	glClearColor(1, 0, 0, 1);
-
 	if (_updateFunction != NULL) {
 		_updateFunction(_differentialTime);
 	}
@@ -133,11 +132,11 @@ int ngbInitWindowAtPosition(char* title, NGBuint x, NGBuint y, NGBuint w, NGBuin
 }
 
 void ngbInitGraphics(void) {
-	GLenum err = glewInit();
+	/*GLenum err = glewInit();
 
 	if (GLEW_OK != err) {
 		exit(EXIT_FAILURE);
-	}
+	}*/
 
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
