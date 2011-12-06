@@ -26,8 +26,8 @@ NGBkeyListener* keyListener = NULL;
 NGBdrawable2D* gameObjs2D = NULL;
 NGBdrawable3D* gameObjs3D = NULL;
 NGBcamera* camera = NULL;
+NGBprofile* profile = NULL;
 
-NGBboolean _doubleBuffering;
 int _differentialTime;
 void (*_updateFunction)(NGBuint) = NULL;
 unsigned long _timer1, _timer2;
@@ -53,7 +53,7 @@ void _ngbDraw(void) {
 		_updateFunction(_differentialTime);
 	}
 
-	if (_doubleBuffering) {
+	if (profile->doubleBuffer) {
 		glutSwapBuffers();
 	} else {
 		glutPostRedisplay();
@@ -99,17 +99,43 @@ void _ngbSpecUp(NGBint key, NGBint x, NGBint y) {
 	}
 }
 
-void ngbInit(int* argc, char** argv, NGBboolean doubleBuffer) {
+NGBprofile* ngbCreateProfile(void) {
+	NGBprofile* newProfile = malloc(sizeof(NGBprofile));
+	newProfile->resolutionX = 640;
+	newProfile->resolutionY = 480;
+	newProfile->colorDepth = 32;
+	newProfile->fullscreen = NGB_FALSE;
+	newProfile->doubleBuffer = NGB_FALSE;
+
+	newProfile->mouseSensitivityX = 3.0;
+	newProfile->mouseSensitivityY = 3.0;
+
+	newProfile->masterVolume = 1.0;
+	newProfile->musicVolume = 1.0;
+	newProfile->entityVolume = 1.0;
+	newProfile->ambiantVolume = 1.0;
+
+	return newProfile;
+}
+
+void ngbSetProfile(NGBprofile* newProfile) {
+	profile = newProfile;
+}
+
+void ngbInit(int* argc, char** argv) {
+
+	if (profile == NULL) {
+		exit(1);
+	}
+
 	glutInit(argc, argv);
 	alutInit(argc, argv);
 
 	srand(time(NULL));
 	_ngbHT_hashInit();
 
-	_doubleBuffering = doubleBuffer;
-
 	int bitmask = GLUT_RGBA | GLUT_DEPTH | GLUT_ALPHA;
-	if (doubleBuffer) {
+	if (profile->doubleBuffer) {
 		bitmask = bitmask | GLUT_DOUBLE;
 	} else {
 		bitmask = bitmask | GLUT_SINGLE;
@@ -118,18 +144,18 @@ void ngbInit(int* argc, char** argv, NGBboolean doubleBuffer) {
 	glutInitDisplayMode(bitmask);
 }
 
-int ngbInitWindowCentered(char* title, NGBuint w, NGBuint h) {
+int ngbInitWindowCentered(char* title) {
 	int x, y;
 
-	x = (glutGet(GLUT_SCREEN_WIDTH) - w) / 2;
-	y = (glutGet(GLUT_SCREEN_HEIGHT) - h) / 2;
+	x = (glutGet(GLUT_SCREEN_WIDTH) - profile->resolutionX) / 2;
+	y = (glutGet(GLUT_SCREEN_HEIGHT) - profile->resolutionY) / 2;
 
-	return ngbInitWindowAtPosition(title, x, y, w, h);
+	return ngbInitWindowAtPosition(title, x, y);
 }
 
-int ngbInitWindowAtPosition(char* title, NGBuint x, NGBuint y, NGBuint w, NGBuint h) {
+int ngbInitWindowAtPosition(char* title, NGBuint x, NGBuint y) {
 	glutInitWindowPosition(x, y);
-	glutInitWindowSize(w, h);
+	glutInitWindowSize(profile->resolutionX, profile->resolutionY);
 	return glutCreateWindow(title);
 }
 

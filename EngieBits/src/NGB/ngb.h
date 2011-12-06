@@ -101,24 +101,9 @@ void ngbHT_destroy(NGBHT* table);
 
 /*
  * ----------------------------------------------------------------
- * Main engine
+ * Game data
  * ----------------------------------------------------------------
  */
-
-struct NGBprofile {
-	NGBuint resolutionX;
-	NGBuint resolutionY;
-	NGBuint colorDepth;
-	NGBboolean fullscreen;
-
-	NGBdouble mouseSensitivityX;
-	NGBdouble mouseSensitivityY;
-
-	NGBdouble masterVolume;
-	NGBdouble musicVolume;
-	NGBdouble entityVolume;
-	NGBdouble ambiantVolume;
-}typedef NGBprofile;
 
 struct NGBkeyListener {
 	NGBboolean altf4;
@@ -179,9 +164,33 @@ struct NGBdrawable3D {
 void ngbDraw2D(NGBdrawable2D* drawable);
 void ngbDraw3D(NGBdrawable3D* drawable);
 
-void ngbInit(int* argc, char** argv, NGBboolean doubleBuffer);
-int ngbInitWindowCentered(char* title, NGBuint w, NGBuint h);
-int ngbInitWindowAtPosition(char* title, NGBuint x, NGBuint y, NGBuint w, NGBuint h);
+/*
+ * ----------------------------------------------------------------
+ * Engiebits main engine
+ * ----------------------------------------------------------------
+ */
+
+struct NGBprofile {
+	NGBuint resolutionX;
+	NGBuint resolutionY;
+	NGBuint colorDepth;
+	NGBboolean fullscreen;
+	NGBboolean doubleBuffer;
+
+	NGBdouble mouseSensitivityX;
+	NGBdouble mouseSensitivityY;
+
+	NGBdouble masterVolume;
+	NGBdouble musicVolume;
+	NGBdouble entityVolume;
+	NGBdouble ambiantVolume;
+}typedef NGBprofile;
+
+NGBprofile* ngbCreateProfile(void);
+void ngbSetProfile(NGBprofile* newProfile);
+void ngbInit(int* argc, char** argv);
+int ngbInitWindowCentered(char* title);
+int ngbInitWindowAtPosition(char* title, NGBuint x, NGBuint y);
 void ngbInitGraphics(void);
 NGBkeyListener* ngbInitKeyListener(NGBboolean altf4);
 void ngbUpdateFunc(void(*func)(NGBuint));
