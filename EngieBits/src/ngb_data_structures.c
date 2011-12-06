@@ -6,7 +6,7 @@
 
 #include "NGB/ngb.h"
 #include "NGB/ngb_internal.h"
-
+#include <stdlib.h>
 #include <string.h>
 
 unsigned char _pearsonHashTab[256];
