@@ -218,7 +218,7 @@ void ngbAA_destroy(NGBAA* assarr) {
 }
 
 //Hash Table
-struct _NGBHT_NODE{
+struct _NGBHT_NODE {
 	void* content;
 	char* key;
 }typedef _NGBHT_NODE;
@@ -226,8 +226,8 @@ struct _NGBHT_NODE{
 NGBHT* ngbHT_create(void) {
 	NGBHT* table = malloc(sizeof(NGBHT));
 	int i;
-	for(i=0;i<256;i++){
-		table->buckets[i]=ngbLL_create();
+	for (i = 0; i < 256; i++) {
+		table->buckets[i] = ngbLL_create();
 	}
 	return table;
 }
@@ -243,9 +243,9 @@ void* ngbHT_get(NGBHT* table, char* key) {
 	unsigned char hash = ngbHT_hash(key);
 	_NGBHT_NODE* node;
 	int i;
-	for(i=0;i<table->buckets[hash]->size;i++){
+	for (i = 0; i < table->buckets[hash]->size; i++) {
 		node = ngbLL_removeFront(table->buckets[hash]);
-		if(strcmp(node->key, key)==0){
+		if (strcmp(node->key, key) == 0) {
 			return node->content;
 		}
 	}
@@ -267,15 +267,15 @@ void _ngbHT_hashInit(void) {
 unsigned char ngbHT_hash(char* key) {
 	unsigned char h = 0;
 	int i;
-	for(i=0;key[i]!='\0';i++){
-		h = _pearsonHashTab[h^key[i]];
+	for (i = 0; key[i] != '\0'; i++) {
+		h = _pearsonHashTab[h ^ key[i]];
 	}
 	return h;
 }
 void ngbHT_destroy(NGBHT* table) {
 	int i;
-	for(i=0;i<256;i++){
-		while(table->buckets[i]->size>0){
+	for (i = 0; i < 256; i++) {
+		while (table->buckets[i]->size > 0) {
 			_NGBHT_NODE* node = ngbLL_removeFront(table->buckets[i]);
 			free(node->content);
 			free(node->key);

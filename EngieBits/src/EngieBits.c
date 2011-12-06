@@ -21,8 +21,10 @@ void testUpdate(NGBuint dt) {
 }
 
 int main(int argc, char** argv) {
-	ngbInit(&argc, argv, NGB_FALSE);
-	ngbInitWindowCentered("Test", 1280, 720);
+	NGBprofile* profile = ngbCreateProfile();
+	ngbSetProfile(profile);
+	ngbInit(&argc, argv);
+	ngbInitWindowCentered("Test");
 	keys = ngbInitKeyListener(NGB_TRUE);
 	ngbInitGraphics();
 	ngbUpdateFunc(testUpdate);
@@ -31,14 +33,3 @@ int main(int argc, char** argv) {
 	ngbMainLoop();
 	return EXIT_FAILURE;
 }
-/*
-int main(int argc, char** argv){
-	ngbInit(&argc, argv, NGB_FALSE);
-	NGBHT* hashTable = ngbHT_create();
-	ngbHT_insert(hashTable, "urmom", "This is a printable string.\n");
-	ngbHT_insert(hashTable, "urface", "This is also a printable string.\n");
-	printf(ngbHT_get(hashTable, "urface"));
-	printf(ngbHT_get(hashTable, "urmom"));
-	return EXIT_SUCCESS;
-}
-*/

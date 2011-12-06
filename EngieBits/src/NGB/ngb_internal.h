@@ -1,8 +1,6 @@
 #ifndef NGB_INTERNAL_H_
 #define NGB_INTERNAL_H_
 
-#include <stdlib.h>
-
 void _ngbDraw(void);
 void _ngbReshape(NGBint w, NGBint h);
 void _ngbKeyDown(unsigned char key, NGBint x, NGBint y);
