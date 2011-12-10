@@ -1,12 +1,39 @@
 #ifndef NGB_INTERNAL_H_
 #define NGB_INTERNAL_H_
 
+/*
+ * ----------------------------------------------------------------
+ * Simple data structures provided by engine
+ * ----------------------------------------------------------------
+ */
+
+void _ngbHT_hashInit(void);
+
+/*
+ * ----------------------------------------------------------------
+ * Game data
+ * ----------------------------------------------------------------
+ */
+
+char* _ngbLoadFile(char* filename);
+
+/*
+ * ----------------------------------------------------------------
+ * Game database
+ * ----------------------------------------------------------------
+ */
+
+/*
+ * ----------------------------------------------------------------
+ * Engiebits main engine
+ * ----------------------------------------------------------------
+ */
+
 void _ngbDraw(void);
 void _ngbReshape(NGBint w, NGBint h);
 void _ngbKeyDown(unsigned char key, NGBint x, NGBint y);
 void _ngbKeyUp(unsigned char key, NGBint x, NGBint y);
 void _ngbSpecDown(NGBint key, NGBint x, NGBint y);
 void _ngbSpecUp(NGBint key, NGBint x, NGBint y);
-void _ngbHT_hashInit(void);
 
 #endif

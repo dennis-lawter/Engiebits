@@ -21,6 +21,12 @@ void testUpdate(NGBuint dt) {
 }
 
 int main(int argc, char** argv) {
+	/*
+	 NGBdatabase* db = ngbSQL_Init();
+	 ngbSQL_UpdateQuery(db, "CREATE TABLE test (id int, login varchar(255), password varchar(255))");
+	 int temp;
+	 ngbSQL_ResultQuery(db, "SELECT * FROM test", &temp);
+	 */
 	NGBprofile* profile = ngbCreateProfile();
 	ngbSetProfile(profile);
 	ngbInit(&argc, argv);

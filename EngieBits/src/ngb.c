@@ -10,11 +10,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
-#include <GL/glew.h>
-#include <GL/freeglut.h>
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alut.h>
 
 /*
  * ----------------------------------------------------------------

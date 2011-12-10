@@ -15,6 +15,13 @@
 #ifndef NGB_H_
 #define NGB_H_
 
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alut.h>
+#include <sqlite3.h>
+
 /*
  * ----------------------------------------------------------------
  * Basic type definitions
@@ -29,6 +36,7 @@ typedef unsigned int NGBuint;
 typedef int NGBint;
 typedef float NGBfloat;
 typedef double NGBdouble;
+typedef sqlite3 NGBdatabase;
 
 /*
  * ----------------------------------------------------------------
@@ -73,6 +81,7 @@ struct NGBDA {
 NGBDA* ngbDA_create(void);
 void ngbDA_set(NGBDA* dynarr, NGBuint key, void* value);
 void* ngbDA_get(NGBDA* dynarr, NGBuint key);
+void** ngbDA_toArray(NGBDA* dynarr);
 void ngbDA_destroy(NGBDA* dynarr);
 
 //Associative Array
@@ -146,6 +155,12 @@ struct NGB2DphysicsObject {
 	NGBuint* bitMask;
 }typedef NGB2DphysicsObject;
 
+struct NGBrawImage {
+	char* data;
+	NGBuint width;
+	NGBuint height;
+};
+
 struct NGBdrawable2D {
 	NGBpoint origin;
 	NGBdouble width;
@@ -161,8 +176,20 @@ struct NGBdrawable3D {
 	NGBuint numBoxes;
 }typedef NGBdrawable3D;
 
+void ngbLoadTextures(char** filenames);
 void ngbDraw2D(NGBdrawable2D* drawable);
 void ngbDraw3D(NGBdrawable3D* drawable);
+
+/*
+ * ----------------------------------------------------------------
+ * Game database
+ * ----------------------------------------------------------------
+ */
+NGBdatabase* ngbSQL_Init(void);
+NGBboolean ngbSQL_UpdateQuery(NGBdatabase* database, char* query);
+NGBAA** ngbSQL_ResultQuery(NGBdatabase* database, char* query,
+		int* sizeReturned);
+void ngbSQL_Destroy(NGBdatabase* database);
 
 /*
  * ----------------------------------------------------------------
@@ -175,7 +202,17 @@ struct NGBprofile {
 	NGBuint resolutionY;
 	NGBuint colorDepth;
 	NGBboolean fullscreen;
+
+	NGBuint modelDetail;
+	NGBuint textureDetail;
+	NGBuint shaderDetail;
+	NGBuint reflectionDetail;
+	NGBuint shadowDetail;
+	NGBuint antialiasingMode;
+	NGBuint filteringMode;
+	NGBboolean motionBlur;
 	NGBboolean doubleBuffer;
+	NGBboolean colorCorrection;
 
 	NGBdouble mouseSensitivityX;
 	NGBdouble mouseSensitivityY;
