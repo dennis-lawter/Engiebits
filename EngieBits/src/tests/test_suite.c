@@ -24,6 +24,11 @@ void expand_tests(){
 	}
 	free(temp_functions);
 }
+
+void destroy_tests(){
+	free(tests.functions);
+	tests.number = 0;
+}
 _Bool test_suite_add_test(_Bool (*test_function)(void)){
 	expand_tests();
 	tests.functions[tests.number] = *test_function;
@@ -41,6 +46,7 @@ _Bool test_suite_execute_tests(){
 	//------------------------------
 
 	printf("----------Test suite end-----------\n");
+	destroy_tests();
 	return return_value;
 }
 
