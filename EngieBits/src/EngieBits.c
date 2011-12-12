@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include "NGB/ngb.h"
+#include "tests/test_suite.h";
 
 int frames;
 int timer;
@@ -36,6 +37,10 @@ int main(int argc, char** argv) {
 	ngbUpdateFunc(testUpdate);
 	frames = 0;
 	timer = 0;
+
+	//-------test suite--------------
+	test_suite();
+	//-------------------------------
 	ngbMainLoop();
 	return EXIT_FAILURE;
 }
