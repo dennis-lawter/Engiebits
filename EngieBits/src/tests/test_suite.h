@@ -11,6 +11,6 @@
 #include <stdbool.h>
 
 _Bool test_suite_add_test();
-_Bool test_suite();
+_Bool test_suite_execute_tests();
 
 #endif /* TEST_SUITE_H_ */

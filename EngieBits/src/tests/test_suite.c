@@ -20,7 +20,6 @@ void expand_tests(){
 
 	int i;
 	for(i=0; i < tests.number; i++){
-		printf("%i\n", tests.number);
 		tests.functions[i] = temp_functions[i];
 	}
 	free(temp_functions);
@@ -31,7 +30,7 @@ _Bool test_suite_add_test(_Bool (*test_function)(void)){
 	tests.number++;
 	return true;
 }
-_Bool test_suite(){
+_Bool test_suite_execute_tests(){
 	_Bool return_value = true;
 
 	printf("----------Test suite begin---------\n");
