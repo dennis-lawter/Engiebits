@@ -5,7 +5,12 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include "NGB/ngb.h"
+
+//----------test suite includes---------
 #include "tests/test_suite.h";
+#include "tests/NGBHT_test.h"
+#include "tests/NGBLL_test.h"
+//--------------------------------------
 
 int frames;
 int timer;
@@ -39,6 +44,8 @@ int main(int argc, char** argv) {
 	timer = 0;
 
 	//-------test suite--------------
+	test_suite_add_test(NGBHT_test);
+	test_suite_add_test(NGBLL_test);
 	test_suite();
 	//-------------------------------
 	ngbMainLoop();

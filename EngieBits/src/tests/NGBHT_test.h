@@ -7,7 +7,7 @@
 
 #ifndef NGBHT_TEST_H_
 #define NGBHT_TEST_H_
-#include <stdbool.h>
+#include "test_suite.h"
 
 _Bool NGBHT_test();
 
