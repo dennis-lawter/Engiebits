@@ -8,6 +8,7 @@
 #include "NGB/ngb_internal.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 //TODO: All this code is prototyping, most of it probably does not work yet.
 

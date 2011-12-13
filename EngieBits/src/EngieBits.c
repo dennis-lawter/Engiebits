@@ -6,6 +6,12 @@
 #include <GL/freeglut.h>
 #include "NGB/ngb.h"
 
+//----------test suite includes---------
+#include "tests/test_suite.h"
+#include "tests/NGBHT_test.h"
+#include "tests/NGBLL_test.h"
+//--------------------------------------
+
 int frames;
 int timer;
 NGBkeyListener* keys;
@@ -36,6 +42,12 @@ int main(int argc, char** argv) {
 	ngbUpdateFunc(testUpdate);
 	frames = 0;
 	timer = 0;
+
+	//-------test suite--------------
+	test_suite_add_test(NGBHT_test);
+	test_suite_add_test(NGBLL_test);
+	test_suite_execute_tests();
+	//-------------------------------
 	ngbMainLoop();
 	return EXIT_FAILURE;
 }
