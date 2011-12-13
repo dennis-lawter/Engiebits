@@ -52,6 +52,7 @@ void _ngbDraw(void) {
 		glutSwapBuffers();
 	} else {
 		glutPostRedisplay();
+		glFlush();
 	}
 }
 
