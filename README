@@ -22,3 +22,4 @@ NGB is developed in C using:
 	FreeGLUT
 	OpenAL
 	ALUT
+	SQLite
