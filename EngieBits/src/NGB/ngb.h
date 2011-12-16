@@ -128,6 +128,16 @@ typedef NGBvertex NGBvector;
 typedef NGBvertex NGBrotation;
 typedef NGBvertex NGBpoint;
 
+struct NGBcoordinateSystem {
+	NGBvertex minimum;
+	NGBvertex maximum;
+}typedef NGBcoordinateSystem;
+
+struct NGBray {
+	NGBpoint start;
+	NGBvector unitVector;
+}typedef NGBray;
+
 struct NGBhitBox {
 	NGBpoint origin;
 	NGBpoint oppositeCorner;
@@ -177,6 +187,8 @@ struct NGBdrawable3D {
 }typedef NGBdrawable3D;
 
 void ngbLoadTextures(char** filenames);
+void ngbSet2DDrawList(NGBdrawable2D** drawables);
+void ngbSet3DDrawList(NGBdrawable3D** drawables);
 void ngbDraw2D(NGBdrawable2D* drawable);
 void ngbDraw3D(NGBdrawable3D* drawable);
 
@@ -225,6 +237,7 @@ struct NGBprofile {
 
 NGBprofile* ngbCreateProfile(void);
 void ngbSetProfile(NGBprofile* newProfile);
+void ngbSetCoordinateSystem(NGBcoordinateSystem* coord);
 void ngbInit(int* argc, char** argv);
 int ngbInitWindowCentered(char* title);
 int ngbInitWindowAtPosition(char* title, NGBuint x, NGBuint y);

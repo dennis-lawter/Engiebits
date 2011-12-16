@@ -16,6 +16,8 @@ void _ngbHT_hashInit(void);
  */
 
 char* _ngbLoadFile(char* filename);
+void _ngbDrawAll2D(void);
+void _ngbDrawAll3D(void);
 
 /*
  * ----------------------------------------------------------------

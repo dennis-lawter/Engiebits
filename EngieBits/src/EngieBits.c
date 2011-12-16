@@ -36,6 +36,16 @@ int main(int argc, char** argv) {
 	NGBprofile* profile = ngbCreateProfile();
 	ngbSetProfile(profile);
 	ngbInit(&argc, argv);
+
+	NGBdrawable2D** tests = malloc(2*sizeof(NGBdrawable2D*));
+	tests[0] = malloc(sizeof(NGBdrawable2D));
+	tests[0]->origin.x = -0.5;
+	tests[0]->origin.y = -0.5;
+	tests[0]->width = 1;
+	tests[0]->height = 1;
+	tests[1]=NULL;
+	ngbSet2DDrawList(tests);
+
 	ngbInitWindowCentered("Test");
 	keys = ngbInitKeyListener(NGB_TRUE);
 	ngbInitGraphics();
