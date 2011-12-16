@@ -17,6 +17,9 @@
 #include <AL/alc.h>
 #include <AL/alut.h>
 
+NGBdrawable2D** _ngbGameObjs2D = NULL;
+NGBdrawable3D** _ngbGameObjs3D = NULL;
+
 char* _ngbLoadFile(char* filename) {
 	FILE* file;
 	long size;
@@ -41,9 +44,43 @@ char* _ngbLoadFile(char* filename) {
 
 	return data;
 }
+void _ngbDrawAll2D(void) {
+	int i;
+	if (_ngbGameObjs2D != NULL) {
+		for (i = 0; _ngbGameObjs2D[i] != NULL; i++) {
+			ngbDraw2D(_ngbGameObjs2D[i]);
+		}
+	}
+}
+void _ngbDrawAll3D(void) {
+	int i;
+	if (_ngbGameObjs3D != NULL) {
+		for (i = 0; _ngbGameObjs3D[i] != NULL; i++) {
+			ngbDraw3D(_ngbGameObjs3D[i]);
+		}
+	}
+}
 
+void ngbSet2DDrawList(NGBdrawable2D** drawables) {
+	_ngbGameObjs2D = drawables;
+}
+void ngbSet3DDrawList(NGBdrawable3D** drawables) {
+	_ngbGameObjs3D = drawables;
+}
 void ngbDraw2D(NGBdrawable2D* drawable) {
 	glPushMatrix();
+
+	glBindTexture(GL_TEXTURE_2D, drawable->spriteTexture);
+
+	glTranslated(drawable->origin.x, drawable->origin.y, 0);
+	glBegin(GL_POLYGON);
+	{
+		glVertex2d(0, 0);
+		glVertex2d(drawable->width, 0);
+		glVertex2d(drawable->width, drawable->height);
+		glVertex2d(0, drawable->height);
+	}
+	glEnd();
 
 	glPopMatrix();
 }

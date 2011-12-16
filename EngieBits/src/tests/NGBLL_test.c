@@ -6,12 +6,11 @@
  */
 #include "NGBLL_test.h"
 
-_Bool NGBLL_test(){
+_Bool NGBLL_test() {
 	printf("\t<test id='NGBLL test'>\n");
 	printf("\t\tInside test\n");
 	printf("\t</test>\n");
 
 	return true;
 }
-
 

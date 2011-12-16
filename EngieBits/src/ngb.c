@@ -17,15 +17,14 @@
  * ----------------------------------------------------------------
  */
 
-NGBkeyListener* keyListener = NULL;
-NGBdrawable2D* gameObjs2D = NULL;
-NGBdrawable3D* gameObjs3D = NULL;
-NGBcamera* camera = NULL;
-NGBprofile* profile = NULL;
-
-int _differentialTime;
+NGBkeyListener* _ngbKeyListener = NULL;
+NGBcamera* _ngbCamera = NULL;
+NGBprofile* _ngbProfile = NULL;
+NGBcoordinateSystem* _ngbCoordinates = NULL;
+NGBint _differentialTime;
 void (*_updateFunction)(NGBuint) = NULL;
 unsigned long _timer1, _timer2;
+NGBvector* _ngbWindowMetrics = NULL;
 
 /*
  * ----------------------------------------------------------------
@@ -48,7 +47,12 @@ void _ngbDraw(void) {
 		_updateFunction(_differentialTime);
 	}
 
-	if (profile->doubleBuffer) {
+	glColor3f(1, 1, 1);
+
+	_ngbDrawAll2D();
+	_ngbDrawAll3D();
+
+	if (_ngbProfile->doubleBuffer) {
 		glutSwapBuffers();
 	} else {
 		glutPostRedisplay();
@@ -56,29 +60,50 @@ void _ngbDraw(void) {
 }
 
 void _ngbReshape(NGBint w, NGBint h) {
-	//TODO
+	if (_ngbWindowMetrics == NULL) {
+		_ngbWindowMetrics = malloc(sizeof(NGBvector));
+		_ngbWindowMetrics->z = 0;
+	}
+	_ngbWindowMetrics->x = w;
+	_ngbWindowMetrics->y = h;
+	if (h == 0)
+		h = 1;
+	glViewport(0, 0, w, h);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	if (_ngbCamera != NULL && _ngbCamera->threeDimensional) {
+		gluPerspective(_ngbCamera->fieldOfView, (GLfloat) w / (GLfloat) h,
+				0.001f, 100.0f);
+	}
+	if (_ngbCoordinates) {
+		glOrtho(_ngbCoordinates->minimum.x, _ngbCoordinates->maximum.x,
+				_ngbCoordinates->minimum.y, _ngbCoordinates->maximum.y,
+				_ngbCoordinates->minimum.z, _ngbCoordinates->maximum.z);
+	}
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void _ngbKeyDown(unsigned char key, NGBint x, NGBint y) {
 	usleep(100);
-	if (keyListener == NULL) {
+	if (_ngbKeyListener == NULL) {
 		return;
 	}
 }
 
 void _ngbKeyUp(unsigned char key, NGBint x, NGBint y) {
 	usleep(100);
-	if (keyListener == NULL) {
+	if (_ngbKeyListener == NULL) {
 		return;
 	}
 }
 
 void _ngbSpecDown(NGBint key, NGBint x, NGBint y) {
 	usleep(100);
-	if (keyListener == NULL) {
+	if (_ngbKeyListener == NULL) {
 		return;
 	}
-	if (keyListener->altf4 && key == GLUT_KEY_F4
+	if (_ngbKeyListener->altf4 && key == GLUT_KEY_F4
 			&& (glutGetModifiers() & GLUT_ACTIVE_ALT)) {
 		exit(EXIT_SUCCESS);
 	} else {
@@ -88,7 +113,7 @@ void _ngbSpecDown(NGBint key, NGBint x, NGBint y) {
 
 void _ngbSpecUp(NGBint key, NGBint x, NGBint y) {
 	usleep(100);
-	if (keyListener == NULL) {
+	if (_ngbKeyListener == NULL) {
 		return;
 	}
 }
@@ -112,13 +137,35 @@ NGBprofile* ngbCreateProfile(void) {
 	return newProfile;
 }
 
+NGBcamera* ngbCreateCamera(void) {
+	NGBcamera* newCamera = malloc(sizeof(NGBcamera));
+
+	newCamera->fieldOfView = 90;
+	newCamera->position.x = 0;
+	newCamera->position.y = 0;
+	newCamera->position.z = 0;
+	newCamera->rotation.x = 0;
+	newCamera->rotation.y = 0;
+	newCamera->rotation.z = 0;
+	newCamera->threeDimensional = NGB_FALSE;
+
+	return newCamera;
+}
+
 void ngbSetProfile(NGBprofile* newProfile) {
-	profile = newProfile;
+	_ngbProfile = newProfile;
+}
+
+void ngbSetCoordinateSystem(NGBcoordinateSystem* coord) {
+	_ngbCoordinates = coord;
+	if (_ngbWindowMetrics != NULL) {
+		_ngbReshape(_ngbWindowMetrics->x, _ngbWindowMetrics->y);
+	}
 }
 
 void ngbInit(int* argc, char** argv) {
 
-	if (profile == NULL) {
+	if (_ngbProfile == NULL) {
 		exit(1);
 	}
 
@@ -129,7 +176,7 @@ void ngbInit(int* argc, char** argv) {
 	_ngbHT_hashInit();
 
 	int bitmask = GLUT_RGBA | GLUT_DEPTH | GLUT_ALPHA;
-	if (profile->doubleBuffer) {
+	if (_ngbProfile->doubleBuffer) {
 		bitmask = bitmask | GLUT_DOUBLE;
 	} else {
 		bitmask = bitmask | GLUT_SINGLE;
@@ -141,15 +188,15 @@ void ngbInit(int* argc, char** argv) {
 int ngbInitWindowCentered(char* title) {
 	int x, y;
 
-	x = (glutGet(GLUT_SCREEN_WIDTH) - profile->resolutionX) / 2;
-	y = (glutGet(GLUT_SCREEN_HEIGHT) - profile->resolutionY) / 2;
+	x = (glutGet(GLUT_SCREEN_WIDTH) - _ngbProfile->resolutionX) / 2;
+	y = (glutGet(GLUT_SCREEN_HEIGHT) - _ngbProfile->resolutionY) / 2;
 
 	return ngbInitWindowAtPosition(title, x, y);
 }
 
 int ngbInitWindowAtPosition(char* title, NGBuint x, NGBuint y) {
 	glutInitWindowPosition(x, y);
-	glutInitWindowSize(profile->resolutionX, profile->resolutionY);
+	glutInitWindowSize(_ngbProfile->resolutionX, _ngbProfile->resolutionY);
 	return glutCreateWindow(title);
 }
 
@@ -168,17 +215,17 @@ void ngbInitGraphics(void) {
 }
 
 NGBkeyListener* ngbInitKeyListener(NGBboolean altf4) {
-	keyListener = malloc(sizeof(NGBkeyListener));
-	keyListener->altf4 = altf4;
+	_ngbKeyListener = malloc(sizeof(NGBkeyListener));
+	_ngbKeyListener->altf4 = altf4;
 	int i;
 	for (i = 0; i < 512; i++) {
-		keyListener->keys[i] = NGB_FALSE;
+		_ngbKeyListener->keys[i] = NGB_FALSE;
 	}
 	glutKeyboardFunc(&_ngbKeyDown);
 	glutKeyboardUpFunc(&_ngbKeyUp);
 	glutSpecialFunc(&_ngbSpecDown);
 	glutSpecialUpFunc(&_ngbSpecUp);
-	return keyListener;
+	return _ngbKeyListener;
 }
 
 void ngbUpdateFunc(void(*func)(NGBuint)) {
