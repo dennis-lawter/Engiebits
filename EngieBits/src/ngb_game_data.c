@@ -20,6 +20,16 @@
 NGBdrawable2D** _ngbGameObjs2D = NULL;
 NGBdrawable3D** _ngbGameObjs3D = NULL;
 
+struct Image{
+	/*
+	 * only local struct right now add prototype to header if needed outside.
+	 */
+	unsigned long sizeX;
+	unsigned long sizeY;
+	char *data;
+};
+typedef struct Image Image;
+
 char* _ngbLoadFile(char* filename) {
 	FILE* file;
 	long size;
@@ -44,6 +54,64 @@ char* _ngbLoadFile(char* filename) {
 
 	return data;
 }
+Image* ngbLoadRAWImage(char* fileName, int w, int h) {
+	Image* image = (Image *) malloc(sizeof(Image));
+	FILE* file;
+	unsigned long size;
+
+	size = w * h * 4;
+
+	image->sizeX = w;
+	image->sizeY = h;
+
+	file = fopen(fileName, "rb");
+	if (file == NULL)
+		return NULL;
+
+	image->data = (char *) malloc(size);
+
+	fread(image->data, size, 1, file);
+	fclose(file);
+
+	return image;
+}
+
+GLuint* _ngbLoadTextures(char** fileNames, int* widths, int* heights, int num) {
+	GLuint* texture = (GLuint*) malloc(num * sizeof(GLuint));
+	Image** image;
+	image = (Image**) malloc(num * sizeof(Image**));
+	int i;
+
+	for (i = 0; i < num; i++) {
+		image[i] = ngbLoadRAWImage(fileNames[i], widths[i], heights[i]);
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	glGenTextures(num, texture);
+
+	for (i = 0; i < num; i++) {
+		if (image[i] == NULL) {
+			printf("ERROR");
+		} else {
+			glBindTexture(GL_TEXTURE_2D, texture[i]);
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, GL_DECAL);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexImage2D(GL_TEXTURE_2D, 0, 4, image[i]->sizeX, image[i]->sizeY,
+					0, GL_RGBA, GL_UNSIGNED_BYTE, image[i]->data);
+		}
+
+		free(image[i]);
+	}
+
+	free(image);
+	return texture;
+}
+
 void _ngbDrawAll2D(void) {
 	int i;
 	if (_ngbGameObjs2D != NULL) {
