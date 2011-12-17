@@ -21,7 +21,7 @@
 #include <AL/alc.h>
 #include <AL/alut.h>
 #include <sqlite3.h>
-
+#include <stdio.h>
 /*
  * ----------------------------------------------------------------
  * Basic type definitions
