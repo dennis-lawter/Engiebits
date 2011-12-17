@@ -37,17 +37,18 @@ int main(int argc, char** argv) {
 	ngbSetProfile(profile);
 	ngbInit(&argc, argv);
 
-	NGBdrawable2D** tests = malloc(2*sizeof(NGBdrawable2D*));
+	NGBdrawable2D** tests = malloc(2 * sizeof(NGBdrawable2D*));
 	tests[0] = malloc(sizeof(NGBdrawable2D));
 	tests[0]->origin.x = -0.5;
 	tests[0]->origin.y = -0.5;
 	tests[0]->width = 1;
 	tests[0]->height = 1;
+
 	// texture test------------
 	int num = 1;
 	char** fileNames = (char**) malloc(num * sizeof(char*));
-	int* widths = (int*) malloc(num * sizeof(int));
-	int* heights = (int*) malloc(num * sizeof(int));
+	NGBuint* widths = (NGBuint*) malloc(num * sizeof(int));
+	NGBuint* heights = (NGBuint*) malloc(num * sizeof(int));
 
 	fileNames[0] = "data/Fugue.raw";
 	widths[0] = 32;
@@ -60,7 +61,8 @@ int main(int argc, char** argv) {
 	printf("%i\n", textures[0]);
 	tests[0]->spriteTexture = textures[0];
 	//-------------------------------------------------------------
-	tests[1]=NULL;
+
+	tests[1] = NULL;
 	ngbSet2DDrawList(tests);
 
 	ngbInitWindowCentered("Test");

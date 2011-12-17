@@ -76,11 +76,17 @@ void ngbDraw2D(NGBdrawable2D* drawable) {
 	glBindTexture(GL_TEXTURE_2D, drawable->spriteTexture);
 
 	glTranslated(drawable->origin.x, drawable->origin.y, 0);
-	glBegin(GL_POLYGON);
+
+	glColor3d(1, 1, 1);
+	glBegin(GL_QUADS);
 	{
+		glTexCoord2d(0, 0);
 		glVertex2d(0, 0);
+		glTexCoord2d(1, 0);
 		glVertex2d(drawable->width, 0);
+		glTexCoord2d(1, 1);
 		glVertex2d(drawable->width, drawable->height);
+		glTexCoord2d(0, 1);
 		glVertex2d(0, drawable->height);
 	}
 	glEnd();

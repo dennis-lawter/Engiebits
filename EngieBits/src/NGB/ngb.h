@@ -186,7 +186,8 @@ struct NGBdrawable3D {
 	NGBuint numBoxes;
 }typedef NGBdrawable3D;
 
-NGBuint* ngbLoadTextures(char** fileNames, int* widths, int* heights, int num);
+NGBuint* ngbLoadTextures(char** fileNames, NGBuint* widths, NGBuint* heights,
+		NGBuint num);
 void ngbSet2DDrawList(NGBdrawable2D** drawables);
 void ngbSet3DDrawList(NGBdrawable3D** drawables);
 void ngbDraw2D(NGBdrawable2D* drawable);

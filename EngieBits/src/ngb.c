@@ -252,7 +252,8 @@ NGBrawImage* ngbLoadRAWImage(char* fileName, int w, int h) {
 	image->height = h;
 
 	file = fopen(fileName, "rb");
-	if (file == NULL)
+	if (file == NULL
+		)
 		return NULL;
 
 	image->data = (char *) malloc(size);
@@ -263,7 +264,8 @@ NGBrawImage* ngbLoadRAWImage(char* fileName, int w, int h) {
 	return image;
 }
 
-NGBuint* ngbLoadTextures(char** fileNames, int* widths, int* heights, int num) {
+NGBuint* ngbLoadTextures(char** fileNames, NGBuint* widths, NGBuint* heights,
+		NGBuint num) {
 	NGBuint* texture = (NGBuint*) malloc(num * sizeof(NGBuint));
 	NGBrawImage** image;
 	image = (NGBrawImage**) malloc(num * sizeof(NGBrawImage**));
