@@ -20,6 +20,8 @@
 NGBdrawable2D** _ngbGameObjs2D = NULL;
 NGBdrawable3D** _ngbGameObjs3D = NULL;
 
+typedef struct Image Image;
+
 char* _ngbLoadFile(char* filename) {
 	FILE* file;
 	long size;
@@ -44,6 +46,7 @@ char* _ngbLoadFile(char* filename) {
 
 	return data;
 }
+
 void _ngbDrawAll2D(void) {
 	int i;
 	if (_ngbGameObjs2D != NULL) {
