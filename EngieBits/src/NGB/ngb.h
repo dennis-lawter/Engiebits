@@ -169,7 +169,7 @@ struct NGBrawImage {
 	char* data;
 	NGBuint width;
 	NGBuint height;
-};
+}typedef NGBrawImage;
 
 struct NGBdrawable2D {
 	NGBpoint origin;
@@ -186,7 +186,7 @@ struct NGBdrawable3D {
 	NGBuint numBoxes;
 }typedef NGBdrawable3D;
 
-void ngbLoadTextures(char** filenames);
+NGBuint* ngbLoadTextures(char** fileNames, int* widths, int* heights, int num);
 void ngbSet2DDrawList(NGBdrawable2D** drawables);
 void ngbSet3DDrawList(NGBdrawable3D** drawables);
 void ngbDraw2D(NGBdrawable2D* drawable);
