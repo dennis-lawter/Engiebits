@@ -243,7 +243,7 @@ void ngbMainLoop(void) {
 
 NGBrawImage* ngbLoadRAWImage(char* fileName, int w, int h) {
 	NGBrawImage* image = (NGBrawImage *) malloc(sizeof(NGBrawImage));
-	char* file;
+	FILE* file;
 	unsigned long size;
 
 	size = w * h * 4;
