@@ -15,7 +15,6 @@ void _ngbHT_hashInit(void);
  * ----------------------------------------------------------------
  */
 
-GLuint* _ngbLoadTextures(char** fileNames, int* widths, int* heights, int num);
 char* _ngbLoadFile(char* filename);
 void _ngbDrawAll2D(void);
 void _ngbDrawAll3D(void);

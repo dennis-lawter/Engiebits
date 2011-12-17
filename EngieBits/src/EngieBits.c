@@ -43,6 +43,23 @@ int main(int argc, char** argv) {
 	tests[0]->origin.y = -0.5;
 	tests[0]->width = 1;
 	tests[0]->height = 1;
+	// texture test------------
+	int num = 1;
+	char** fileNames = (char**) malloc(num * sizeof(char*));
+	int* widths = (int*) malloc(num * sizeof(int));
+	int* heights = (int*) malloc(num * sizeof(int));
+
+	fileNames[0] = "data/Fugue.raw";
+	widths[0] = 32;
+	heights[0] = 64;
+	//fileNames[1] = "data/Ground.raw";
+	//widths[1] = 32;
+	//heights[1] = 32;
+	GLuint* textures;
+	textures = ngbLoadTextures(fileNames, widths, heights, num);
+	printf("%i\n", textures[0]);
+	tests[0]->spriteTexture = textures[0];
+	//-------------------------------------------------------------
 	tests[1]=NULL;
 	ngbSet2DDrawList(tests);
 
