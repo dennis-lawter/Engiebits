@@ -80,13 +80,13 @@ void ngbDraw2D(NGBdrawable2D* drawable) {
 	glColor3d(1, 1, 1);
 	glBegin(GL_QUADS);
 	{
-		glTexCoord2d(0, 0);
-		glVertex2d(0, 0);
-		glTexCoord2d(1, 0);
-		glVertex2d(drawable->width, 0);
-		glTexCoord2d(1, 1);
-		glVertex2d(drawable->width, drawable->height);
 		glTexCoord2d(0, 1);
+		glVertex2d(0, 0);
+		glTexCoord2d(1, 1);
+		glVertex2d(drawable->width, 0);
+		glTexCoord2d(1, 0);
+		glVertex2d(drawable->width, drawable->height);
+		glTexCoord2d(0, 0);
 		glVertex2d(0, drawable->height);
 	}
 	glEnd();

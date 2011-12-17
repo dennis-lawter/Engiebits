@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <stdlib.h>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include "NGB/ngb.h"
@@ -37,6 +35,11 @@ int main(int argc, char** argv) {
 	ngbSetProfile(profile);
 	ngbInit(&argc, argv);
 
+	ngbInitWindowCentered("Test");
+	keys = ngbInitKeyListener(NGB_TRUE);
+	ngbInitGraphics();
+	ngbUpdateFunc(testUpdate);
+
 	NGBdrawable2D** tests = malloc(2 * sizeof(NGBdrawable2D*));
 	tests[0] = malloc(sizeof(NGBdrawable2D));
 	tests[0]->origin.x = -0.5;
@@ -58,17 +61,13 @@ int main(int argc, char** argv) {
 	//heights[1] = 32;
 	NGBuint* textures;
 	textures = ngbLoadTextures(fileNames, widths, heights, num);
-	printf("%i\n", textures[0]);
+	printf("Textures[0]: %i\n", textures[0]);
 	tests[0]->spriteTexture = textures[0];
 	//-------------------------------------------------------------
 
 	tests[1] = NULL;
 	ngbSet2DDrawList(tests);
 
-	ngbInitWindowCentered("Test");
-	keys = ngbInitKeyListener(NGB_TRUE);
-	ngbInitGraphics();
-	ngbUpdateFunc(testUpdate);
 	frames = 0;
 	timer = 0;
 

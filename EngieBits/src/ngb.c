@@ -252,9 +252,9 @@ NGBrawImage* ngbLoadRAWImage(char* fileName, int w, int h) {
 	image->height = h;
 
 	file = fopen(fileName, "rb");
-	if (file == NULL
-		)
+	if (file == NULL) {
 		return NULL;
+	}
 
 	image->data = (char *) malloc(size);
 
