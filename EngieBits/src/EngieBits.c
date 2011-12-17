@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
 	//fileNames[1] = "data/Ground.raw";
 	//widths[1] = 32;
 	//heights[1] = 32;
-	GLuint* textures;
+	NGBuint* textures;
 	textures = ngbLoadTextures(fileNames, widths, heights, num);
 	printf("%i\n", textures[0]);
 	tests[0]->spriteTexture = textures[0];
