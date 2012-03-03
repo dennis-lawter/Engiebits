@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <sqlite3.h>
 
 //TODO: All this code is prototyping, most of it probably does not work yet.
 

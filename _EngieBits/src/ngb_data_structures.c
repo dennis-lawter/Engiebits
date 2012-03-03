@@ -233,11 +233,11 @@ NGBHT* ngbHT_create(void) {
 	return table;
 }
 void ngbHT_insert(NGBHT* table, char* key, void* data) {
+	//TODO: Override old data if same key inserted
 	unsigned char hash = ngbHT_hash(key);
 	_NGBHT_NODE* newNode = malloc(sizeof(_NGBHT_NODE));
 	newNode->key = key;
 	newNode->content = data;
-	//TODO: Override old data if same key inserted
 	ngbLL_insertFront(table->buckets[hash], newNode);
 }
 void* ngbHT_get(NGBHT* table, char* key) {

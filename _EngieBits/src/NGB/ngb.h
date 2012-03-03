@@ -22,7 +22,6 @@
 #include <AL/alut.h>
 #include <sqlite3.h>
 #include <stdio.h>
-
 /*
  * ----------------------------------------------------------------
  * Basic type definitions
@@ -236,8 +235,8 @@ struct NGBprofile {
 	NGBdouble entityVolume;
 	NGBdouble ambiantVolume;
 }typedef NGBprofile;
-NGBprofile* ngbCreateProfile(void);
 
+NGBprofile* ngbCreateProfile(void);
 void ngbSetProfile(NGBprofile* newProfile);
 void ngbSetCoordinateSystem(NGBcoordinateSystem* coord);
 void ngbInit(int* argc, char** argv);
