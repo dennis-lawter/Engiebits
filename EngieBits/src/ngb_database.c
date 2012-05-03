@@ -11,9 +11,52 @@
 #include <string.h>
 #include <sqlite3.h>
 
-//TODO: All this code is prototyping, most of it probably does not work yet.
+NGBlog* NGBlog_init(char* fileName, char* logStamp, NGBboolean timeStamp,
+		NGBboolean openHeader) {
+	NGBlog* log = (NGBlog*) malloc(sizeof(NGBlog));
+	log->fileName = fileName;
+	log->logStamp = logStamp;
+	log->timeStamp = timeStamp;
+	log->openHeader = openHeader;
+	log->file = fopen(fileName, "a+");
+	fseek(log->file, 0, SEEK_END);
+	if (openHeader) {
+		if (ftell(log->file) != 0) {
+			fprintf(log->file, "\n");
+		}
+	}
+}
+void NGBlog_write(NGBlog* log, char* message) {
+	time_t currentTime;
+	struct tm* timeInfo;
+	char* timestamp;
 
-NGBdatabase* ngbSQL_Init(void) {
+	time(&currentTime);
+	timeInfo = localtime(&currentTime);
+	timestamp = asctime(timeInfo);
+
+	timestamp[strlen(timestamp)] = '\0';
+
+	fprintf(log->file, "[%s]: %s\n", timestamp, message);
+}
+void NGBlog_newLine(NGBlog* log) {
+	fprintf(log->file, "\n");
+}
+void NGBlog_lineBreak(NGBlog* log) {
+	fprintf(
+			log->file,
+			"--------------------------------------------------------------------------------\n");
+}
+void NGBlog_destroy(NGBlog* log) {
+	free(log->file);
+	free(log->fileName);
+	free(log->logStamp);
+	free(log);
+}
+
+//TODO: All code below is prototyping, most of it probably does not work yet.
+
+NGBSQL* NGBSQL_init(void) {
 	sqlite3* database;
 
 	int err = sqlite3_open("data/db/sql.db", &database);
@@ -25,7 +68,7 @@ NGBdatabase* ngbSQL_Init(void) {
 	return database;
 }
 
-NGBboolean ngbSQL_UpdateQuery(NGBdatabase* database, char* query) {
+NGBboolean NGBSQL_updateQuery(NGBSQL* database, char* query) {
 	sqlite3_stmt* statement;
 	NGBboolean result;
 	int err = sqlite3_prepare_v2(database, query, strlen(query) + 1, &statement,
@@ -39,8 +82,7 @@ NGBboolean ngbSQL_UpdateQuery(NGBdatabase* database, char* query) {
 	return result;
 }
 
-NGBAA** ngbSQL_ResultQuery(NGBdatabase* database, char* query,
-		int* sizeReturned) {
+NGBAA** NGBSQL_resultQuery(NGBSQL* database, char* query, int* sizeReturned) {
 	NGBAA** results = NULL;
 	sqlite3_stmt* statement;
 
@@ -71,7 +113,7 @@ NGBAA** ngbSQL_ResultQuery(NGBdatabase* database, char* query,
 	return results;
 }
 
-void ngbSQL_Destroy(NGBdatabase* database) {
+void NGBSQL_destroy(NGBSQL* database) {
 	sqlite3_close(database);
 	free(database);
 }

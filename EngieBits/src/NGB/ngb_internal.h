@@ -1,6 +1,8 @@
 #ifndef NGB_INTERNAL_H_
 #define NGB_INTERNAL_H_
 
+#include "ngb.h"
+
 /*
  * ----------------------------------------------------------------
  * Simple data structures provided by engine
@@ -43,5 +45,13 @@ void _ngbKeyDown(unsigned char key, NGBint x, NGBint y);
 void _ngbKeyUp(unsigned char key, NGBint x, NGBint y);
 void _ngbSpecDown(NGBint key, NGBint x, NGBint y);
 void _ngbSpecUp(NGBint key, NGBint x, NGBint y);
+
+/*
+ * ----------------------------------------------------------------
+ * Engiebits internal global variables
+ * ----------------------------------------------------------------
+ */
+
+NGBlog* __errorLog;
 
 #endif

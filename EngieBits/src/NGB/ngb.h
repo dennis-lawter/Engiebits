@@ -37,7 +37,7 @@ typedef unsigned int NGBuint;
 typedef int NGBint;
 typedef float NGBfloat;
 typedef double NGBdouble;
-typedef sqlite3 NGBdatabase;
+typedef sqlite3 NGBSQL;
 
 /*
  * ----------------------------------------------------------------
@@ -45,11 +45,17 @@ typedef sqlite3 NGBdatabase;
  * ----------------------------------------------------------------
  */
 
+//Deletable node
+struct NGB_NODE {
+	void* content;
+	void(*destroy)(void);
+}typedef NGB_NODE;
+
 //Linked List
 struct NGBLL_NODE {
-	void *content;
-	struct NGBLL_NODE *next;
-	struct NGBLL_NODE *last;
+	struct NGB_NODE* content;
+	struct NGBLL_NODE* next;
+	struct NGBLL_NODE* last;
 }typedef NGBLL_NODE;
 
 struct NGBLL {
@@ -74,7 +80,7 @@ void ngbLL_destroy(NGBLL* list);
 //Dynamic Array
 
 struct NGBDA {
-	void* data;
+	struct NGB_NODE *data;
 	NGBuint size;
 	NGBuint capacity;
 }typedef NGBDA;
@@ -187,8 +193,10 @@ struct NGBdrawable3D {
 	NGBuint numBoxes;
 }typedef NGBdrawable3D;
 
+NGBrawImage* ngbLoadRAWImage(char* fileName, int w, int h);
 NGBuint* ngbLoadTextures(char** fileNames, NGBuint* widths, NGBuint* heights,
 		NGBuint num);
+NGBAA* ngbTexturesToAA(char** keys, NGBuint* textures, NGBuint num);
 void ngbSet2DDrawList(NGBdrawable2D** drawables);
 void ngbSet3DDrawList(NGBdrawable3D** drawables);
 void ngbDraw2D(NGBdrawable2D* drawable);
@@ -199,11 +207,25 @@ void ngbDraw3D(NGBdrawable3D* drawable);
  * Game database
  * ----------------------------------------------------------------
  */
-NGBdatabase* ngbSQL_Init(void);
-NGBboolean ngbSQL_UpdateQuery(NGBdatabase* database, char* query);
-NGBAA** ngbSQL_ResultQuery(NGBdatabase* database, char* query,
-		int* sizeReturned);
-void ngbSQL_Destroy(NGBdatabase* database);
+
+struct NGBlog {
+	char* fileName;
+	char* logStamp;
+	FILE* file;
+	NGBboolean timeStamp;
+	NGBboolean openHeader;
+}typedef NGBlog;
+NGBlog* NGBlog_init(char* fileName, char* logStamp, NGBboolean timeStamp,
+		NGBboolean openHeader);
+void NGBlog_write(NGBlog* log, char* message);
+void NGBlog_newLine(NGBlog* log);
+void NGBlog_lineBreak(NGBlog* log);
+void NGBlog_destroy(NGBlog* log);
+
+NGBSQL* NGBSQL_init(void);
+NGBboolean NGBSQL_updateQuery(NGBSQL* database, char* query);
+NGBAA** NGBSQL_resultQuery(NGBSQL* database, char* query, int* sizeReturned);
+void NGBSQL_destroy(NGBSQL* database);
 
 /*
  * ----------------------------------------------------------------

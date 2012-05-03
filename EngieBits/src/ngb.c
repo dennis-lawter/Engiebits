@@ -166,7 +166,13 @@ void ngbSetCoordinateSystem(NGBcoordinateSystem* coord) {
 
 void ngbInit(int* argc, char** argv) {
 
+	__errorLog = NGBlog_init("/data/log/error.log", "ERROR", NGB_TRUE, NGB_TRUE);
+	if(__errorLog == NULL) {
+		exit(1);
+	}
+
 	if (_ngbProfile == NULL) {
+		NGBlog_write(__errorLog, "Profile could not be loaded!  Exiting...");
 		exit(1);
 	}
 
@@ -240,64 +246,3 @@ void ngbMainLoop(void) {
 	glutReshapeFunc(&_ngbReshape);
 	glutMainLoop();
 }
-
-NGBrawImage* ngbLoadRAWImage(char* fileName, int w, int h) {
-	NGBrawImage* image = (NGBrawImage *) malloc(sizeof(NGBrawImage));
-	FILE* file;
-	unsigned long size;
-
-	size = w * h * 4;
-
-	image->width = w;
-	image->height = h;
-
-	file = fopen(fileName, "rb");
-	if (file == NULL) {
-		return NULL;
-	}
-
-	image->data = (char *) malloc(size);
-
-	fread(image->data, size, 1, file);
-	fclose(file);
-
-	return image;
-}
-
-NGBuint* ngbLoadTextures(char** fileNames, NGBuint* widths, NGBuint* heights,
-		NGBuint num) {
-	NGBuint* texture = (NGBuint*) malloc(num * sizeof(NGBuint));
-	NGBrawImage** image;
-	image = (NGBrawImage**) malloc(num * sizeof(NGBrawImage**));
-	int i;
-
-	for (i = 0; i < num; i++) {
-		image[i] = ngbLoadRAWImage(fileNames[i], widths[i], heights[i]);
-	}
-
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	glGenTextures(num, texture);
-
-	for (i = 0; i < num; i++) {
-		if (image[i] == NULL) {
-			printf("ERROR");
-		} else {
-			glBindTexture(GL_TEXTURE_2D, texture[i]);
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, GL_DECAL);
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, 4, image[i]->width, image[i]->height,
-					0, GL_RGBA, GL_UNSIGNED_BYTE, image[i]->data);
-		}
-
-		free(image[i]);
-	}
-
-	free(image);
-	return texture;
-}
-

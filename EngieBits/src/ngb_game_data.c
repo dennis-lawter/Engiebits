@@ -64,6 +64,57 @@ void _ngbDrawAll3D(void) {
 	}
 }
 
+NGBrawImage* ngbLoadRAWImage(char* fileName, int w, int h) {
+	char* data = _ngbLoadFile(fileName);
+	if (data == NULL) {
+		return NULL;
+	}
+	NGBrawImage* image = (NGBrawImage *) malloc(sizeof(NGBrawImage));
+
+	image->width = w;
+	image->height = h;
+	image->data = data;
+
+	return image;
+}
+
+NGBuint* ngbLoadTextures(char** fileNames, NGBuint* widths, NGBuint* heights,
+		NGBuint num) {
+	NGBuint* texture = (NGBuint*) malloc(num * sizeof(NGBuint));
+	NGBrawImage** image;
+	image = (NGBrawImage**) malloc(num * sizeof(NGBrawImage**));
+	int i;
+
+	for (i = 0; i < num; i++) {
+		image[i] = ngbLoadRAWImage(fileNames[i], widths[i], heights[i]);
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	glGenTextures(num, texture);
+
+	for (i = 0; i < num; i++) {
+		if (image[i] == NULL) {
+			printf("ERROR");
+		} else {
+			glBindTexture(GL_TEXTURE_2D, texture[i]);
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, GL_DECAL);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexImage2D(GL_TEXTURE_2D, 0, 4, image[i]->width, image[i]->height,
+					0, GL_RGBA, GL_UNSIGNED_BYTE, image[i]->data);
+		}
+
+		free(image[i]);
+	}
+
+	free(image);
+	return texture;
+}
+
 void ngbSet2DDrawList(NGBdrawable2D** drawables) {
 	_ngbGameObjs2D = drawables;
 }
